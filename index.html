@@ -1,138 +1,3308 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aidan - Independent Developer. Personal software projects, trading research and data analysis.">
-  <title>Aidan — Independent Developer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jiahong.dong / Aidan · 程序员与价格行为学习者</title>
+  <meta name="description" content="jiahong.dong (Aidan) 的个人主页 — 构建本地优先软件与系统工具，在 1m/5m 裸K 图表中打磨概率思维与执行纪律。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
   <style>
-    * { box-sizing: border-box; }
-    body {
+    /* ==========================================================================
+       1. Design Tokens — Solaris Gallery Aesthetic
+       ========================================================================== */
+    :root {
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
+      --font-mono: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+      --glass-bg: rgba(10, 13, 20, 0.52);
+      --glass-bg-strong: rgba(10, 13, 20, 0.72);
+      --glass-bg-hover: rgba(15, 20, 31, 0.68);
+      --glass-border: rgba(255, 255, 255, 0.11);
+      --glass-border-hover: rgba(255, 255, 255, 0.22);
+      --glass-specular: rgba(255, 255, 255, 0.08);
+      --glass-subtle: rgba(255, 255, 255, 0.055);
+      --glass-subtle-hover: rgba(255, 255, 255, 0.105);
+
+      --text-primary: rgba(248, 250, 252, 0.96);
+      --text-secondary: rgba(226, 232, 240, 0.76);
+      --text-muted: rgba(203, 213, 225, 0.54);
+
+      --solar-warm: #f6b36b;
+      --solar-glow: rgba(246, 179, 107, 0.22);
+      --accent-sky: #7dd3fc;
+      --accent-sky-soft: rgba(125, 211, 252, 0.13);
+      --accent-bull: #34d399;
+      --accent-bull-soft: rgba(52, 211, 153, 0.14);
+      --accent-bear: #fb7185;
+      --accent-amber: #fbbf24;
+
+      --radius-xs: 6px;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 20px;
+      --radius-pill: 9999px;
+
+      --nav-h: 62px;
+      --max-w: 1180px;
+      --veil-opacity: 0.18;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ==========================================================================
+       2. Reset & Base Layout
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
       margin: 0;
-      background: #f7f8fa;
-      color: #27313f;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.7;
+      padding: 0;
     }
-    main {
-      max-width: 860px;
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--nav-h) + 28px);
+      background-color: #070a11;
+      color-scheme: dark;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      background-color: #070a11;
+      line-height: 1.65;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==========================================================================
+       3. Full-Viewport Procedural Sky Canvas & Adaptive Veil
+       ========================================================================== */
+    #sky-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* 自适应氛围暗幕：保持上右天空通透，同时确保亮色预设下前景文字清晰易读 */
+    #sky-veil {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 85% 65% at 20% 85%, rgba(6, 9, 16, calc(var(--veil-opacity) + 0.32)), transparent 70%),
+        linear-gradient(180deg, rgba(6, 9, 16, calc(var(--veil-opacity) * 0.7)) 0%, rgba(6, 9, 16, calc(var(--veil-opacity) * 0.45)) 42%, rgba(6, 9, 16, calc(var(--veil-opacity) + 0.36)) 100%);
+      transition: opacity 400ms ease;
+    }
+
+    .page-layer {
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
       margin: 0 auto;
-      padding: 76px 24px;
+      padding: 0 22px;
     }
-    header { margin-bottom: 64px; }
-    .eyebrow {
-      color: #527da5;
-      font-size: 13px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+
+    /* ==========================================================================
+       4. Gallery Frosted Glass Surface System
+       ========================================================================== */
+    .glass {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
+      box-shadow:
+        inset 0 1px 0 var(--glass-specular),
+        0 18px 48px -24px rgba(0, 0, 0, 0.65);
+      transition: border-color 240ms var(--ease), background-color 240ms var(--ease), transform 240ms var(--ease);
     }
-    h1 {
-      color: #173c63;
-      font-size: clamp(38px, 7vw, 58px);
-      line-height: 1.15;
-      letter-spacing: -2px;
-      margin: 18px 0;
+
+    .glass.interactive:hover {
+      background: var(--glass-bg-hover);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-2px);
     }
-    .intro {
-      color: #697586;
-      font-size: 17px;
-      max-width: 600px;
+
+    /* ==========================================================================
+       5. Minimal Floating Top Navigation Bar
+       ========================================================================== */
+    .nav-wrap {
+      position: fixed;
+      top: 14px;
+      left: 0;
+      right: 0;
+      z-index: 80;
+      padding: 0 16px;
+      pointer-events: none;
     }
-    h2 {
-      color: #173c63;
-      font-size: 20px;
-      margin-bottom: 20px;
+
+    .navbar {
+      pointer-events: auto;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      height: var(--nav-h);
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(9, 12, 19, 0.56);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px) saturate(150%);
+      -webkit-backdrop-filter: blur(24px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 14px 36px -18px rgba(0, 0, 0, 0.72);
     }
-    .projects {
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .solar-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff7ed, var(--solar-warm) 65%, #d97706);
+      box-shadow: 0 0 14px 2px rgba(246, 179, 107, 0.68);
+      flex-shrink: 0;
+    }
+
+    .brand-host {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(52, 211, 153, 0.28);
+      background: rgba(52, 211, 153, 0.1);
+      color: #6ee7b7;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.02em;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #34d399;
+      box-shadow: 0 0 8px rgba(52, 211, 153, 0.9);
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-link {
+      font-size: 0.84rem;
+      font-weight: 450;
+      color: var(--text-secondary);
+      padding: 7px 13px;
+      border-radius: var(--radius-pill);
+      transition: color 180ms ease, background-color 180ms ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text-primary);
+      background: var(--glass-subtle);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-chip {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-subtle);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 180ms var(--ease);
+      white-space: nowrap;
+    }
+
+    .nav-chip:hover,
+    .nav-chip.active {
+      color: var(--text-primary);
+      border-color: var(--glass-border-hover);
+      background: var(--glass-subtle-hover);
+    }
+
+    .preset-cycler {
+      display: none;
+    }
+
+    .preset-dot-mini {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--solar-warm);
+      box-shadow: 0 0 8px rgba(246, 179, 107, 0.75);
+    }
+
+    .icon-only {
+      width: 36px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    .mobile-toggle {
+      display: inline-flex;
+    }
+
+    /* 移动端导航抽屉 */
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 84px;
+      left: 16px;
+      right: 16px;
+      z-index: 79;
+      padding: 12px;
+      border-radius: var(--radius-lg);
+      background: rgba(9, 12, 19, 0.86);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 24px 56px -16px rgba(0, 0, 0, 0.8);
+    }
+
+    .mobile-drawer.open {
+      display: block;
+    }
+
+    .mobile-drawer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mobile-drawer-list a {
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+    }
+
+    .mobile-drawer-list a:hover {
+      background: var(--glass-subtle);
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       6. Solaris-Style Collapsible Floating "Atmosphere" Popover
+       ========================================================================== */
+    .atmosphere-popover {
+      position: fixed;
+      top: 86px;
+      right: 16px;
+      z-index: 90;
+      width: min(332px, calc(100vw - 32px));
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: rgba(10, 13, 21, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      backdrop-filter: blur(26px) saturate(150%);
+      -webkit-backdrop-filter: blur(26px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 28px 64px -18px rgba(0, 0, 0, 0.85);
+      opacity: 0;
+      transform: translateY(-8px) scale(0.985);
+      pointer-events: none;
+      transition: opacity 220ms var(--ease), transform 220ms var(--ease);
+    }
+
+    .atmosphere-popover.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .atmo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .atmo-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .atmo-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .atmo-engine {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-muted);
+    }
+
+    .atmo-close {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-xs);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: all 160ms ease;
+    }
+
+    .atmo-close:hover {
+      background: var(--glass-subtle-hover);
+      color: var(--text-primary);
+    }
+
+    .preset-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .preset-pill {
+      padding: 7px 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-align: center;
+      transition: all 180ms var(--ease);
+    }
+
+    .preset-pill:hover {
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--text-primary);
+    }
+
+    .preset-pill.active {
+      background: rgba(246, 179, 107, 0.16);
+      border-color: rgba(246, 179, 107, 0.45);
+      color: #fde68a;
+    }
+
+    .slider-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .slider-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+    }
+
+    .slider-label {
+      color: var(--text-secondary);
+    }
+
+    .slider-val {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.71rem;
+      color: var(--text-muted);
+    }
+
+    /* Ultra-thin Solaris range input */
+    input[type="range"].solar-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 18px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    input[type="range"].solar-slider:focus {
+      outline: none;
+    }
+
+    input[type="range"].solar-slider::-webkit-slider-runnable-track {
+      height: 2px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    input[type="range"].solar-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #f8fafc;
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      box-shadow: 0 0 10px rgba(246, 179, 107, 0.55);
+      margin-top: -4.5px;
+      transition: transform 140ms ease;
+    }
+
+    input[type="range"].solar-slider:hover::-webkit-slider-thumb {
+      transform: scale(1.22);
+    }
+
+    input[type="range"].solar-slider::-moz-range-track {
+      height: 2px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    input[type="range"].solar-slider::-moz-range-thumb {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #f8fafc;
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      box-shadow: 0 0 10px rgba(246, 179, 107, 0.55);
+    }
+
+    .atmo-foot {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .atmo-hint {
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      color: var(--text-muted);
+    }
+
+    .atmo-reset {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 5px 11px;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      transition: all 160ms ease;
+    }
+
+    .atmo-reset:hover {
+      background: rgba(255, 255, 255, 0.11);
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       7. Hero Stage — Full-Height Gallery Composition
+       ========================================================================== */
+    .hero {
+      min-height: 92vh;
+      padding: 132px 0 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .hero-editorial {
+      max-width: 590px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(253, 230, 138, 0.88);
+      margin-bottom: 16px;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+    }
+
+    .hero-eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 1px;
+      background: rgba(246, 179, 107, 0.7);
+    }
+
+    .hero-title {
+      font-size: clamp(2.3rem, 5.6vw, 3.85rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
+      margin-bottom: 18px;
+      text-shadow: 0 8px 32px rgba(0, 0, 0, 0.48);
+    }
+
+    .hero-handle {
+      font-weight: 300;
+      font-size: 0.54em;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+      margin-left: 8px;
+      vertical-align: baseline;
+    }
+
+    .hero-bio {
+      font-size: clamp(0.96rem, 1.4vw, 1.06rem);
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 28px;
+      max-width: 540px;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 20px;
+      border-radius: var(--radius-pill);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 220ms var(--ease);
+    }
+
+    .pill-btn-primary {
+      background: rgba(248, 250, 252, 0.92);
+      color: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 28px -10px rgba(246, 179, 107, 0.42);
+    }
+
+    .pill-btn-primary:hover {
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .pill-btn-outline {
+      background: rgba(10, 13, 20, 0.46);
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .pill-btn-outline:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.34);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .pill-btn-ghost:hover {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.26);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    /* Solaris-Style Frosted JSX Component Card (Aidan.tsx) */
+    .code-card {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .code-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .code-file {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .code-file-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-sky);
+      opacity: 0.85;
+    }
+
+    .copy-code-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      transition: all 180ms ease;
+    }
+
+    .copy-code-btn:hover {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .code-pre {
+      padding: 18px 20px;
+      font-family: var(--font-mono);
+      font-size: 0.79rem;
+      line-height: 1.78;
+      overflow-x: auto;
+      color: rgba(226, 232, 240, 0.9);
+      white-space: pre;
+    }
+
+    .tok-kw { color: #c4b5fd; }
+    .tok-comp { color: #fde68a; }
+    .tok-prop { color: #7dd3fc; }
+    .tok-str { color: #6ee7b7; }
+    .tok-punc { color: rgba(148, 163, 184, 0.65); }
+
+    .preset-prop-val {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 0 2px;
+      transition: background-color 420ms ease, color 420ms ease;
+    }
+
+    .preset-prop-val.pulse {
+      background-color: rgba(246, 179, 107, 0.34);
+      color: #fef3c7;
+    }
+
+    /* ==========================================================================
+       8. Section Framing & Editorial Headings
+       ========================================================================== */
+    section.content-section {
+      padding: 64px 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .section-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(246, 179, 107, 0.86);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: clamp(1.45rem, 2.6vw, 1.95rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    .section-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-top: 5px;
+      max-width: 560px;
+    }
+
+    /* ==========================================================================
+       9. Section 1: 工程项目 (#projects)
+       ========================================================================== */
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-pill {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--glass-border);
+      background: rgba(10, 13, 20, 0.44);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 180ms var(--ease);
+    }
+
+    .filter-pill:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-hover);
+    }
+
+    .filter-pill.active {
+      background: rgba(248, 250, 252, 0.14);
+      border-color: rgba(246, 179, 107, 0.45);
+      color: #fef3c7;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 16px;
     }
-    .card {
-      background: white;
-      border: 1px solid #e5e9ef;
-      border-radius: 14px;
-      padding: 24px;
+
+    .repo-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      height: 100%;
     }
-    .card h3 { color: #234f78; margin-top: 0; }
-    .card p { color: #697586; font-size: 14px; }
-    .tag {
-      display: inline-block;
-      background: #edf4fa;
-      color: #37678e;
+
+    .repo-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .repo-cat {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--text-muted);
+    }
+
+    .repo-arrow {
+      color: var(--text-muted);
+      transition: transform 220ms var(--ease), color 220ms ease;
+    }
+
+    .repo-card:hover .repo-arrow {
+      color: var(--solar-warm);
+      transform: translate(2px, -2px);
+    }
+
+    .repo-name {
+      font-family: var(--font-mono);
+      font-size: 1.04rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin: 12px 0 8px;
+      color: var(--text-primary);
+    }
+
+    .repo-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .repo-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .lang-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--text-secondary);
+    }
+
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* ==========================================================================
+       10. Section 2: 交易观察室 (#trading)
+       ========================================================================== */
+    .observatory-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .chart-panel {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .chart-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .chart-ident {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-mono);
+      font-size: 0.79rem;
+    }
+
+    .tf-badge {
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: var(--accent-sky-soft);
+      border: 1px solid rgba(125, 211, 252, 0.28);
+      color: var(--accent-sky);
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .chart-hud {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.73rem;
+      color: var(--text-secondary);
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(5, 8, 14, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hud-note {
+      color: #fde68a;
+    }
+
+    .pa-canvas-box {
+      position: relative;
+      width: 100%;
+      height: 318px;
+      border-radius: var(--radius-md);
+      background: rgba(5, 8, 14, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      overflow: hidden;
+    }
+
+    #pa-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: pan-y;
+    }
+
+    .chart-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .layer-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .layer-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      transition: all 180ms ease;
+    }
+
+    .layer-chip .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.45;
+    }
+
+    .layer-chip.active {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .layer-chip.active .dot {
+      opacity: 1;
+    }
+
+    .layer-chip[data-layer="ema"].active .dot { background: var(--accent-amber); }
+    .layer-chip[data-layer="tl"].active .dot { background: var(--accent-sky); }
+    .layer-chip[data-layer="labels"].active .dot { background: var(--accent-bull); }
+    .layer-chip[data-layer="count"].active .dot { background: #c4b5fd; }
+
+    .replay-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(246, 179, 107, 0.36);
+      background: rgba(246, 179, 107, 0.14);
+      color: #fde68a;
+      font-size: 0.76rem;
+      font-weight: 500;
+      transition: all 180ms ease;
+    }
+
+    .replay-btn:hover {
+      background: rgba(246, 179, 107, 0.24);
+    }
+
+    /* Right column: Framework + Discipline Checklist */
+    .trading-side {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .framework-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .framework-card {
+      padding: 15px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .framework-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .framework-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .framework-tag {
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      color: rgba(246, 179, 107, 0.9);
+      letter-spacing: 0.04em;
+    }
+
+    .framework-desc {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .checklist-panel {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .checklist-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .checklist-head h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .checklist-sub {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .checklist-badge {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.72rem;
       padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      white-space: nowrap;
+      transition: all 220ms ease;
     }
-    a { color: #326c9d; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    footer {
-      border-top: 1px solid #e1e6ec;
-      margin-top: 64px;
-      padding-top: 24px;
-      color: #8993a0;
-      font-size: 13px;
+
+    .checklist-badge.ready {
+      border-color: rgba(52, 211, 153, 0.42);
+      background: rgba(52, 211, 153, 0.16);
+      color: #6ee7b7;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.09);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, var(--solar-warm), var(--accent-bull));
+      transition: width 280ms var(--ease);
+    }
+
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .check-btn {
+      width: 100%;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.035);
+      transition: all 180ms ease;
+    }
+
+    .check-btn:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .check-btn.checked {
+      border-color: rgba(52, 211, 153, 0.34);
+      background: rgba(52, 211, 153, 0.11);
+    }
+
+    .check-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid rgba(255, 255, 255, 0.24);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: transparent;
+      transition: all 180ms ease;
+    }
+
+    .check-btn.checked .check-box {
+      background: var(--accent-bull);
+      border-color: var(--accent-bull);
+      color: #06130e;
+    }
+
+    .check-label {
+      font-size: 0.84rem;
+      color: var(--text-primary);
+      line-height: 1.48;
+    }
+
+    .check-btn.checked .check-label {
+      color: var(--text-muted);
+      text-decoration: line-through;
+      text-decoration-color: rgba(52, 211, 153, 0.45);
+    }
+
+    .checklist-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .checklist-status-text {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .subtle-btn {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 5px 11px;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+      transition: all 160ms ease;
+    }
+
+    .subtle-btn:hover {
+      background: rgba(255, 255, 255, 0.11);
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       11. Section 3: 技术栈与构建理念 (#stack)
+       ========================================================================== */
+    .stack-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .stack-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .stack-group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .stack-group-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .tech-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tech-pill {
+      font-family: var(--font-mono);
+      font-size: 0.77rem;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--text-secondary);
+      transition: all 180ms ease;
+    }
+
+    .tech-pill:hover {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.09);
+      transform: translateY(-1px);
+    }
+
+    .principles-panel {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .principle-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: border-color 180ms ease, background-color 180ms ease;
+    }
+
+    .principle-item:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .principle-idx {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: rgba(246, 179, 107, 0.88);
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .principle-title {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+
+    .principle-sub {
+      font-size: 0.81rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ==========================================================================
+       12. Minimal Atmospheric Footer
+       ========================================================================== */
+    .footer {
+      margin-top: 36px;
+      padding: 26px 0 42px;
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .footer-telemetry {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(10, 13, 20, 0.48);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--text-secondary);
+    }
+
+    .telemetry-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--solar-warm);
+      box-shadow: 0 0 8px rgba(246, 179, 107, 0.85);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-links a,
+    .footer-links button {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      transition: color 160ms ease;
+    }
+
+    .footer-links a:hover,
+    .footer-links button:hover {
+      color: #fde68a;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 560ms ease, transform 560ms var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       13. Responsive Breakpoints
+       ========================================================================== */
+    @media (min-width: 640px) {
+      .status-pill {
+        display: inline-flex;
+      }
+      .preset-cycler {
+        display: inline-flex;
+      }
+      .projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .footer-inner {
+        flex-direction: row;
+        text-align: left;
+      }
+    }
+
+    @media (min-width: 960px) {
+      .nav-links {
+        display: flex;
+      }
+      .mobile-toggle {
+        display: none;
+      }
+      .hero {
+        min-height: 94vh;
+        padding: 150px 0 72px;
+      }
+      .hero-layout {
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 44px;
+      }
+      .projects-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .observatory-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+      .stack-layout {
+        grid-template-columns: 0.95fr 1.05fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <div class="eyebrow">Independent Developer</div>
-      <h1>Building tools<br>for better thinking.</h1>
-      <p class="intro">
-        I'm Aidan, an independent developer interested in
-        software engineering, financial markets, and
-        personal productivity.
-        This website introduces my personal projects
-        and research interests.
-      </p>
-      <a href="https://github.com/dongjiahong">GitHub →</a>
-    </header>
+  <!-- ======================== 全视口程序化天空背景 ======================== -->
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+  <div id="sky-veil" aria-hidden="true"></div>
 
-    <section>
-      <h2>Projects & Research</h2>
-      <div class="projects">
-        <article class="card">
-          <span class="tag">Trading Research</span>
-          <h3>Trading Data & Analysis</h3>
-          <p>
-            A personal research tool using cTrader Open API
-            to collect historical OHLC market data and
-            personal trading history for Price Action
-            research, backtesting and trade review.
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="tag">Productivity</span>
-          <h3>Personal Software Projects</h3>
-          <p>
-            Exploring software tools for capturing ideas,
-            organizing knowledge, reading and improving
-            personal workflows.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section style="margin-top:48px">
-      <h2>About</h2>
-      <p class="intro">
-        I build software for personal use and educational
-        research. My projects focus on practical tools,
-        data analysis and independent experimentation.
-      </p>
-    </section>
-
-    <footer>
-      © 2026 Aidan · Independent Developer
-      <br>
-      <a href="https://github.com/dongjiahong">
-        github.com/dongjiahong
+  <!-- ======================== 极简悬浮顶部导航栏 ======================== -->
+  <div class="nav-wrap">
+    <header class="navbar" id="top">
+      <a href="#overview" class="brand" aria-label="jiahong.dong 首页">
+        <span class="solar-dot" aria-hidden="true"></span>
+        <span class="brand-host">aidan.dpdns.org</span>
+        <span class="status-pill">Focusing</span>
       </a>
+
+      <nav class="nav-links" aria-label="主导航">
+        <a href="#overview" class="nav-link active">概览</a>
+        <a href="#projects" class="nav-link">工程</a>
+        <a href="#trading" class="nav-link">交易</a>
+        <a href="#stack" class="nav-link">栈与原则</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- 快捷切换大气预设 -->
+        <button id="preset-cycler-btn" type="button" class="nav-chip preset-cycler" title="点击切换天空预设">
+          <span class="preset-dot-mini" aria-hidden="true"></span>
+          <span id="nav-preset-name" class="mono">Dusk</span>
+        </button>
+
+        <!-- Atmosphere 折叠面板按钮 -->
+        <button id="atmo-toggle-btn" type="button" class="nav-chip" aria-expanded="false" aria-controls="atmosphere-popover" title="调整大气与天空参数">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <circle cx="9" cy="6" r="2.2" fill="currentColor"></circle>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <circle cx="15" cy="12" r="2.2" fill="currentColor"></circle>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+            <circle cx="11" cy="18" r="2.2" fill="currentColor"></circle>
+          </svg>
+          <span>Atmosphere</span>
+        </button>
+
+        <!-- GitHub 外部链接 -->
+        <a href="https://github.com/dongjiahong" target="_blank" rel="noopener noreferrer" class="nav-chip icon-only" aria-label="访问 GitHub 主页" title="GitHub · dongjiahong">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.1-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.16 1.18a10.96 10.96 0 0 1 5.76 0c2.19-1.49 3.16-1.18 3.16-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.26 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/>
+          </svg>
+        </a>
+
+        <!-- 移动端折叠菜单按钮 -->
+        <button id="mobile-menu-btn" type="button" class="nav-chip icon-only mobile-toggle" aria-label="打开导航菜单" aria-expanded="false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <!-- 移动端折叠菜单 -->
+  <div id="mobile-drawer" class="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-list">
+      <a href="#overview">概览</a>
+      <a href="#projects">工程项目</a>
+      <a href="#trading">交易观察室</a>
+      <a href="#stack">技术栈与原则</a>
+    </div>
+  </div>
+
+  <!-- ======================== Solaris Atmosphere 浮动参数面板 ======================== -->
+  <aside id="atmosphere-popover" class="atmosphere-popover" aria-hidden="true" aria-label="天空大气控制面板">
+    <div class="atmo-head">
+      <div class="atmo-title-group">
+        <span class="atmo-title">Atmosphere</span>
+        <span id="atmo-engine-badge" class="atmo-engine">WebGL2</span>
+      </div>
+      <button id="atmo-close-btn" type="button" class="atmo-close" aria-label="关闭面板">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div id="preset-grid" class="preset-grid" role="group" aria-label="天空预设">
+      <!-- 由 JS 渲染 6 个预设按钮 -->
+    </div>
+
+    <div id="slider-list" class="slider-list">
+      <!-- 由 JS 渲染 7 个超细参数滑块 -->
+    </div>
+
+    <div class="atmo-foot">
+      <span class="atmo-hint">Procedural Sky Shader</span>
+      <button id="atmo-reset-btn" type="button" class="atmo-reset">Reset</button>
+    </div>
+  </aside>
+
+  <!-- ======================== 主页面内容层 ======================== -->
+  <div class="page-layer">
+    <main>
+      <!-- ==================== Hero 画廊主舞台 ==================== -->
+      <section id="overview" class="hero">
+        <div class="container hero-layout">
+          <!-- 左下：Solaris 风格静谧编辑排版区 -->
+          <div class="hero-editorial">
+            <div class="hero-eyebrow" id="hero-eyebrow">PROGRAMMER · PRICE ACTION LEARNER</div>
+            <h1 class="hero-title">
+              <span id="hero-name">jiahong.dong</span><span class="hero-handle">/ Aidan</span>
+            </h1>
+            <p class="hero-bio" id="hero-bio">
+              VibeCoding 小王子，大模型 TOKEN 消耗者。构建本地优先软件与系统工具，在 1m/5m 裸K 图表中持续打磨概率思维与执行纪律。
+            </p>
+
+            <div class="hero-actions">
+              <a href="#projects" class="pill-btn pill-btn-primary">探索项目</a>
+              <a href="#trading" class="pill-btn pill-btn-outline">交易观察室</a>
+              <a href="https://github.com/dongjiahong" target="_blank" rel="noopener noreferrer" class="pill-btn pill-btn-ghost">
+                GitHub ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- 右下：Solaris 风格磨砂代码组件卡 (Aidan.tsx) -->
+          <div class="glass code-card">
+            <div class="code-card-head">
+              <div class="code-file">
+                <span class="code-file-dot" aria-hidden="true"></span>
+                <span>Aidan.tsx</span>
+              </div>
+              <button id="copy-tsx-btn" type="button" class="copy-code-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-tsx-label">Copy</span>
+              </button>
+            </div>
+            <pre id="tsx-code-pre" class="code-pre"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== Section 1: 工程项目 ==================== -->
+      <section id="projects" class="content-section reveal">
+        <div class="container">
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">01 / ENGINEERING</div>
+              <h2 class="section-title">工程项目</h2>
+              <p class="section-subtitle">来自 github.com/dongjiahong 的公开实践，聚焦本地优先桌面应用、行情图表工具与极简基建。</p>
+            </div>
+
+            <div id="project-filters" class="filter-pills" role="tablist" aria-label="项目分类">
+              <!-- 由 JS 动态渲染 -->
+            </div>
+          </div>
+
+          <div id="projects-grid" class="projects-grid">
+            <!-- 由 JS 动态渲染 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== Section 2: 交易观察室 ==================== -->
+      <section id="trading" class="content-section reveal">
+        <div class="container">
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">02 / PRICE ACTION LAB</div>
+              <h2 class="section-title">交易观察室</h2>
+              <p class="section-subtitle">1m/5m 日内裸K 学习记录：识别清晰结构，等待高质量信号棒，用纪律替代主观预测。</p>
+            </div>
+          </div>
+
+          <div class="observatory-grid">
+            <!-- 左栏：交互式价格行为 K 线仪表面板 -->
+            <div class="glass chart-panel">
+              <div class="chart-topbar">
+                <div class="chart-ident">
+                  <span>CRYPTO · PA</span>
+                  <span class="tf-badge">5m</span>
+                  <span style="color:var(--text-muted);">Two-Leg PB → H1/H2 → BO</span>
+                </div>
+                <button id="pa-replay-btn" type="button" class="replay-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                  </svg>
+                  逐根重播
+                </button>
+              </div>
+
+              <div class="chart-hud">
+                <span id="pa-hud-ohlc">BAR #26 · O:107.6 H:108.5 L:107.5 C:108.2</span>
+                <span id="pa-hud-note" class="hud-note">悬停任意 K 线查看结构拆解</span>
+              </div>
+
+              <div class="pa-canvas-box">
+                <canvas id="pa-canvas" aria-label="26根5分钟价格行为趋势与两段回调图"></canvas>
+              </div>
+
+              <div class="chart-controls">
+                <div class="layer-group">
+                  <button type="button" class="layer-chip active" data-layer="ema"><span class="dot"></span>EMA 20</button>
+                  <button type="button" class="layer-chip active" data-layer="tl"><span class="dot"></span>微趋势线</button>
+                  <button type="button" class="layer-chip active" data-layer="labels"><span class="dot"></span>H1/H2 标注</button>
+                  <button type="button" class="layer-chip active" data-layer="count"><span class="dot"></span>Bar Count</button>
+                </div>
+                <span class="mono" style="font-size:0.71rem;color:var(--text-muted);">26 Bars · Al Brooks Setup</span>
+              </div>
+            </div>
+
+            <!-- 右栏：学习框架 + 入场前纪律清单 -->
+            <div class="trading-side">
+              <div id="framework-stack" class="framework-stack">
+                <!-- 由 JS 渲染 3 个研习卡片 -->
+              </div>
+
+              <div class="glass checklist-panel">
+                <div class="checklist-head">
+                  <div>
+                    <h3>入场前纪律清单</h3>
+                    <p class="checklist-sub">Pre-Trade Discipline · Local Persisted</p>
+                  </div>
+                  <span id="checklist-badge" class="checklist-badge">0 / 5</span>
+                </div>
+
+                <div class="progress-track" aria-hidden="true">
+                  <div id="checklist-progress" class="progress-fill"></div>
+                </div>
+
+                <div id="checklist-items" class="checklist-items">
+                  <!-- 由 JS 渲染 5 条自检项 -->
+                </div>
+
+                <div class="checklist-foot">
+                  <span id="checklist-status-text" class="checklist-status-text">结构未确认前，空仓等待也是执行。</span>
+                  <button id="checklist-reset-btn" type="button" class="subtle-btn">重置</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== Section 3: 技术栈与构建理念 ==================== -->
+      <section id="stack" class="content-section reveal">
+        <div class="container">
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">03 / STACK &amp; PRINCIPLES</div>
+              <h2 class="section-title">技术栈与构建理念</h2>
+              <p class="section-subtitle">写代码与做交易共享同一套底层哲学：克制噪音、尊重边界、持续复盘。</p>
+            </div>
+          </div>
+
+          <div class="stack-layout">
+            <div id="stack-panel" class="glass stack-panel">
+              <!-- 由 JS 渲染技术栈分组 -->
+            </div>
+
+            <div id="principles-panel" class="glass principles-panel">
+              <!-- 由 JS 渲染 4 条平行原则 -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==================== 极简大气页脚 ==================== -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>© 2026 jiahong.dong · aidan.dpdns.org</div>
+        <div class="footer-telemetry">
+          <span class="telemetry-dot" aria-hidden="true"></span>
+          <span id="footer-telemetry-text">WebGL2 Procedural Sky · Preset: dusk</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/dongjiahong" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="#overview">顶部 ↑</a>
+          <button id="footer-reset-sky" type="button">重置天空</button>
+        </div>
+      </div>
     </footer>
-  </main>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * SITE_CONFIG：个人主页核心内容配置区
+     * 所有个人信息、开源项目、交易框架、纪律清单与技术栈集中于此，方便随时修改。
+     * =========================================================================
+     */
+    const SITE_CONFIG = {
+      name: "jiahong.dong",
+      handle: "Aidan",
+      domain: "aidan.dpdns.org",
+      github: "https://github.com/dongjiahong",
+      eyebrow: "PROGRAMMER · PRICE ACTION LEARNER",
+      bio: "VibeCoding 小王子，大模型 TOKEN 消耗者。构建本地优先软件与系统工具，在 1m/5m 裸K 图表中持续打磨概率思维与执行纪律。",
+
+      // Hero 右下角 Aidan.tsx 卡片参数
+      componentSpec: {
+        focus: "Local-First & Price Action",
+        stack: ["TypeScript", "Rust", "Swift"],
+        timeframe: "1m / 5m Crypto PA",
+        status: "focusing"
+      },
+
+      // Section 1: 公开仓库项目列表
+      projectCategories: ["全部", "桌面与本地优先", "交易工具", "系统与基建"],
+      languageColors: {
+        TypeScript: "#3178c6",
+        Swift: "#f05138",
+        JavaScript: "#f1e05a",
+        Rust: "#dea584",
+        Shell: "#89e051"
+      },
+      projects: [
+        {
+          name: "ReadingBook",
+          language: "TypeScript",
+          category: "桌面与本地优先",
+          desc: "左侧沉浸读书 + 右侧无限批注画布的桌面阅读器（Tauri 2 + React 19），让长文阅读与思维拆解自然融合。",
+          url: "https://github.com/dongjiahong/ReadingBook"
+        },
+        {
+          name: "AnyCopy",
+          language: "Swift",
+          category: "桌面与本地优先",
+          desc: "完全本地优先的 macOS 原生复制粘贴管理工具，轻量常驻、零云端依赖，守住剪贴板数据主权。",
+          url: "https://github.com/dongjiahong/AnyCopy"
+        },
+        {
+          name: "drawing_k",
+          language: "JavaScript",
+          category: "交易工具",
+          desc: "简洁高效的 K 线绘图与结构标注工具，辅助日常盘后复盘、微趋势线绘制与价格行为推演。",
+          url: "https://github.com/dongjiahong/drawing_k"
+        },
+        {
+          name: "navigator",
+          language: "TypeScript",
+          category: "桌面与本地优先",
+          desc: "领航员：面向个人工作流的任务规划与视觉看板系统，收拢进行中的事项，降低上下文切换摩擦。",
+          url: "https://github.com/dongjiahong/navigator"
+        },
+        {
+          name: "gold_k",
+          language: "Rust",
+          category: "交易工具",
+          desc: "基于 Rust 编写的行情与 K 线处理工具，注重内存效率、极简依赖与低延迟数据流处理。",
+          url: "https://github.com/dongjiahong/gold_k"
+        },
+        {
+          name: "hysteria2-alpine",
+          language: "Shell",
+          category: "系统与基建",
+          desc: "Hysteria 2 一键部署方案：Alpine 极简容器、64MB 内存占用、纯 UDP 传输与自动化进程守护脚本。",
+          url: "https://github.com/dongjiahong/hysteria2-alpine"
+        }
+      ],
+
+      // Section 2: 交易学习框架
+      tradingFramework: [
+        {
+          title: "Al Brooks 裸K结构",
+          tag: "STRUCTURE",
+          desc: "聚焦微趋势线、H1/H2 与 L1/L2 二次回调，优先筛选实体饱满、收盘贴近极值的信号K，过滤杂乱重叠区。"
+        },
+        {
+          title: "市场背景与节奏",
+          tag: "CONTEXT",
+          desc: "先辨趋势与震荡区间（TR），以 EMA20 相对位置锚定强弱，结合大周期关键位与 1m/5m 节奏共振。"
+        },
+        {
+          title: "风控与执行",
+          tag: "RISK",
+          desc: "单笔固定风险敞口，只参与盈亏比与止损边界清晰的结构；复盘流程永远优先于盘中情绪波动。"
+        }
+      ],
+
+      // 入场前 5 项纪律自检清单
+      checklistItems: [
+        "已明确当前大背景是单边趋势还是震荡区间（TR）",
+        "价格与 EMA20 及关键支撑/阻力位的空间关系清晰",
+        "信号棒收盘质量、实体比例与影线符合入场标准",
+        "入场前已定好止损点位、仓位手数与目标盈亏比",
+        "心态平稳，确认无 FOMO 追单或报复性交易冲动"
+      ],
+
+      // Section 3: 技术栈分组
+      stackGroups: [
+        {
+          title: "前端与桌面",
+          color: "#7dd3fc",
+          items: ["TypeScript", "React 19", "Vite", "Tauri 2", "Tailwind CSS"]
+        },
+        {
+          title: "原生与系统",
+          color: "#f6b36b",
+          items: ["Rust", "Swift", "macOS", "Linux VPS", "Docker / Alpine"]
+        },
+        {
+          title: "架构偏好",
+          color: "#6ee7b7",
+          items: ["Local-First", "IndexedDB", "WebDAV 同步", "AI 规范驱动开发"]
+        }
+      ],
+
+      // Section 3: 工程与交易平行原则
+      principles: [
+        {
+          idx: "01",
+          title: "代码追求低耦合高内聚，交易追求高盈亏比与低噪音",
+          sub: "删掉多余抽象与多余指标，只保留真正决定系统稳定性的核心结构。"
+        },
+        {
+          idx: "02",
+          title: "先写规范再动手，先看背景再找信号",
+          sub: "脱离上下文的优雅代码容易返工，脱离市场背景的漂亮信号棒常是陷阱。"
+        },
+        {
+          idx: "03",
+          title: "本地优先守护数据主权，固定风控守护账户本金",
+          sub: "把不可控的外部依赖降到最低，让每一次回撤都严格落在可承受边界内。"
+        },
+        {
+          idx: "04",
+          title: "持续复盘：用版本控制迭代代码，用图表截图迭代认知",
+          sub: "每一次提交记录与每一张标注过的 K 线图，都是可复利的长期资产。"
+        }
+      ]
+    };
+
+    /* =========================================================================
+       安全本地存储工具（兼容隐私模式 / 受限环境）
+       ========================================================================= */
+    const SafeStorage = {
+      get(key, fallback) {
+        try {
+          const v = window.localStorage.getItem(key);
+          return v !== null ? JSON.parse(v) : fallback;
+        } catch (e) {
+          return fallback;
+        }
+      },
+      set(key, value) {
+        try {
+          window.localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+          // 忽略存储不可用错误
+        }
+      }
+    };
+
+    /* =========================================================================
+       模块一：Solaris 风格全视口 WebGL2 程序化天空引擎 (+ 2D Canvas 降级)
+       ========================================================================= */
+    const SKY_PRESETS = {
+      dusk: {
+        label: "Dusk",
+        elevation: 0.13,
+        haze: 0.44,
+        cloudStreaks: 0.52,
+        duskFlush: 0.72,
+        flare: 0.34,
+        exposure: 1.02,
+        driftSpeed: 0.28,
+        veil: 0.18,
+        zenith: [0.045, 0.072, 0.148],
+        horizon: [0.78, 0.40, 0.20],
+        sunTint: [1.0, 0.76, 0.48],
+        dotColor: "#f6b36b"
+      },
+      dawn: {
+        label: "Dawn",
+        elevation: 0.19,
+        haze: 0.38,
+        cloudStreaks: 0.46,
+        duskFlush: 0.45,
+        flare: 0.28,
+        exposure: 1.06,
+        driftSpeed: 0.24,
+        veil: 0.28,
+        zenith: [0.095, 0.135, 0.275],
+        horizon: [0.88, 0.62, 0.56],
+        sunTint: [1.0, 0.86, 0.72],
+        dotColor: "#f9b496"
+      },
+      sunset: {
+        label: "Sunset",
+        elevation: 0.06,
+        haze: 0.56,
+        cloudStreaks: 0.68,
+        duskFlush: 0.96,
+        flare: 0.48,
+        exposure: 1.04,
+        driftSpeed: 0.34,
+        veil: 0.19,
+        zenith: [0.055, 0.062, 0.145],
+        horizon: [0.95, 0.31, 0.14],
+        sunTint: [1.0, 0.62, 0.30],
+        dotColor: "#fb7145"
+      },
+      noon: {
+        label: "Noon",
+        elevation: 0.72,
+        haze: 0.26,
+        cloudStreaks: 0.30,
+        duskFlush: 0.06,
+        flare: 0.42,
+        exposure: 0.94,
+        driftSpeed: 0.20,
+        veil: 0.38,
+        zenith: [0.08, 0.24, 0.56],
+        horizon: [0.54, 0.74, 0.92],
+        sunTint: [1.0, 0.97, 0.91],
+        dotColor: "#7dd3fc"
+      },
+      flare: {
+        label: "Flare",
+        elevation: 0.16,
+        haze: 0.60,
+        cloudStreaks: 0.36,
+        duskFlush: 0.66,
+        flare: 0.92,
+        exposure: 1.12,
+        driftSpeed: 0.22,
+        veil: 0.24,
+        zenith: [0.065, 0.095, 0.185],
+        horizon: [0.94, 0.56, 0.24],
+        sunTint: [1.0, 0.82, 0.50],
+        dotColor: "#fbbf24"
+      },
+      fog: {
+        label: "Fog",
+        elevation: 0.28,
+        haze: 0.92,
+        cloudStreaks: 0.80,
+        duskFlush: 0.22,
+        flare: 0.12,
+        exposure: 0.88,
+        driftSpeed: 0.14,
+        veil: 0.30,
+        zenith: [0.14, 0.17, 0.22],
+        horizon: [0.46, 0.49, 0.54],
+        sunTint: [0.96, 0.91, 0.84],
+        dotColor: "#cbd5e1"
+      }
+    };
+
+    const PRESET_ORDER = ["dawn", "dusk", "sunset", "noon", "flare", "fog"];
+
+    const SLIDER_SPECS = [
+      { key: "elevation", label: "Sun Elevation", min: 0.0, max: 1.0, step: 0.01 },
+      { key: "haze", label: "Haze", min: 0.0, max: 1.0, step: 0.01 },
+      { key: "cloudStreaks", label: "Cloud Streaks", min: 0.0, max: 1.0, step: 0.01 },
+      { key: "duskFlush", label: "Dusk Flush", min: 0.0, max: 1.0, step: 0.01 },
+      { key: "flare", label: "Flare", min: 0.0, max: 1.0, step: 0.01 },
+      { key: "exposure", label: "Exposure", min: 0.5, max: 1.5, step: 0.01 },
+      { key: "driftSpeed", label: "Drift Speed", min: 0.0, max: 1.0, step: 0.01 }
+    ];
+
+    function createSkyEngine(onPresetChange) {
+      const canvas = document.getElementById("sky-canvas");
+      const engineBadge = document.getElementById("atmo-engine-badge");
+      const footerTelemetry = document.getElementById("footer-telemetry-text");
+      const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      let activePresetKey = "dusk";
+      let isReducedMotion = reduceMotionQuery.matches;
+      let engineMode = "WebGL2";
+
+      // 当前插值状态与目标状态（确保切换预设时如丝般顺滑过渡）
+      const clonePresetState = (p) => ({
+        elevation: p.elevation,
+        haze: p.haze,
+        cloudStreaks: p.cloudStreaks,
+        duskFlush: p.duskFlush,
+        flare: p.flare,
+        exposure: p.exposure,
+        driftSpeed: p.driftSpeed,
+        veil: p.veil,
+        zenith: [...p.zenith],
+        horizon: [...p.horizon],
+        sunTint: [...p.sunTint]
+      });
+
+      const current = clonePresetState(SKY_PRESETS.dusk);
+      const target = clonePresetState(SKY_PRESETS.dusk);
+
+      // GLSL ES 3.00 顶点与片元着色器
+      const VS_SRC = `#version 300 es
+        precision highp float;
+        const vec2 VERTS[3] = vec2[3](
+          vec2(-1.0, -1.0),
+          vec2( 3.0, -1.0),
+          vec2(-1.0,  3.0)
+        );
+        out vec2 v_uv;
+        void main() {
+          vec2 p = VERTS[gl_VertexID];
+          v_uv = p * 0.5 + 0.5;
+          gl_Position = vec4(p, 0.0, 1.0);
+        }
+      `;
+
+      const FS_SRC = `#version 300 es
+        precision highp float;
+
+        in vec2 v_uv;
+        out vec4 fragColor;
+
+        uniform vec2  u_res;
+        uniform float u_time;
+        uniform float u_elevation;
+        uniform float u_haze;
+        uniform float u_cloudStreaks;
+        uniform float u_duskFlush;
+        uniform float u_flare;
+        uniform float u_exposure;
+        uniform float u_driftSpeed;
+        uniform float u_reducedMotion;
+        uniform vec3  u_zenith;
+        uniform vec3  u_horizon;
+        uniform vec3  u_sunTint;
+
+        // Interleaved Gradient Noise (用于消除 8-bit 天空色带)
+        float ign(vec2 p) {
+          vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+          return fract(magic.z * fract(dot(p, magic.xy)));
+        }
+
+        float hash21(vec2 p) {
+          p = fract(p * vec2(234.34, 435.345));
+          p += dot(p, p + 34.23);
+          return fract(p.x * p.y);
+        }
+
+        float noise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          vec2 u = f * f * (3.0 - 2.0 * f);
+          float a = hash21(i);
+          float b = hash21(i + vec2(1.0, 0.0));
+          float c = hash21(i + vec2(0.0, 1.0));
+          float d = hash21(i + vec2(1.0, 1.0));
+          return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+        }
+
+        float fbm(vec2 p) {
+          float v = 0.0;
+          float amp = 0.52;
+          mat2 rot = mat2(0.84, 0.54, -0.54, 0.84);
+          for (int i = 0; i < 5; i++) {
+            v += amp * noise(p);
+            p = rot * p * 2.04 + vec2(13.7, 7.1);
+            amp *= 0.48;
+          }
+          return v;
+        }
+
+        vec3 acesToneMap(vec3 x) {
+          const float a = 2.51;
+          const float b = 0.03;
+          const float c = 2.43;
+          const float d = 0.59;
+          const float e = 0.14;
+          return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+        }
+
+        void main() {
+          vec2 uv = v_uv;
+          float aspect = u_res.x / max(u_res.y, 1.0);
+          float motionScale = 1.0 - u_reducedMotion;
+          float horizonY = 0.15;
+
+          // 太阳位置放在视口偏右中上区域，与左下角文字形成画廊式留白平衡
+          float sunX = aspect > 1.05 ? 0.67 : 0.60;
+          float sunY = mix(horizonY + 0.015, 0.80, u_elevation);
+          vec2 sunPos = vec2(sunX, sunY);
+
+          // 归一化高度 (0 = 地平线, 1 = 天顶)
+          float h = clamp((uv.y - horizonY) / (1.0 - horizonY), 0.0, 1.0);
+
+          // 1. Rayleigh + Ozone 大气梯度
+          float rayleighCurve = pow(1.0 - h, mix(2.35, 1.45, u_haze));
+          vec3 sky = mix(u_zenith, u_horizon, rayleighCurve);
+
+          // 低仰角臭氧蓝紫过渡带 (Chappuis band)
+          float lowSun = 1.0 - smoothstep(0.0, 0.48, u_elevation);
+          float ozoneBand = exp(-pow((h - 0.34) / 0.24, 2.0)) * lowSun * (1.0 - u_haze * 0.5);
+          sky += vec3(0.07, 0.05, 0.14) * ozoneBand * 0.72;
+
+          // 地平线暖色漫反射带 (Dusk Flush)
+          float azimuth = exp(-pow((uv.x - sunPos.x) * aspect * 0.62, 2.0));
+          float flushBand = exp(-h * mix(6.8, 3.2, u_haze)) * (0.45 + 0.55 * azimuth);
+          vec3 flushColor = mix(vec3(0.95, 0.44, 0.18), vec3(0.96, 0.22, 0.14), clamp(u_duskFlush, 0.0, 1.0));
+          sky += flushColor * flushBand * u_duskFlush * 0.68;
+
+          // 雾霾柔化与对比收敛 (Haze)
+          vec3 mistCol = mix(u_horizon * 0.85, vec3(0.42, 0.46, 0.52), u_haze * 0.55);
+          sky = mix(sky, mistCol, u_haze * (0.16 + 0.42 * pow(1.0 - h, 1.6)));
+
+          // 2. 太阳本体（含低仰角大气折射压扁与微弱热浪 seeing 扰动）
+          vec2 delta = (uv - sunPos) * vec2(aspect, 1.0);
+          float flatten = mix(1.26, 1.0, smoothstep(0.0, 0.26, u_elevation));
+          float shimmer = (noise(vec2(uv.y * 42.0, u_time * 1.4 * motionScale)) - 0.5)
+                          * 0.0022 * lowSun * motionScale * exp(-length(delta) * 14.0);
+          vec2 sunDelta = vec2(delta.x + shimmer, delta.y * flatten);
+          float sunDist = length(sunDelta);
+          float radialDist = length(delta);
+
+          // 太阳盘面与边缘暗化
+          float discRadius = mix(0.032, 0.024, u_elevation);
+          float discSoft = mix(0.004, 0.022, u_haze * u_haze);
+          float sunDisc = 1.0 - smoothstep(discRadius - discSoft * 0.4, discRadius + discSoft, sunDist);
+          float limb = clamp(1.0 - (sunDist / max(discRadius, 0.001)), 0.0, 1.0);
+          vec3 discColor = mix(u_sunTint * 1.4, vec3(1.0, 0.99, 0.96), pow(limb, 0.55));
+
+          // Mie 前向散射光晕（多层衰减）
+          float corona = exp(-radialDist * mix(16.0, 7.5, u_haze)) * mix(1.45, 0.82, u_haze);
+          float aureole = exp(-radialDist * mix(4.6, 2.4, u_haze)) * (0.48 + 0.34 * u_haze);
+          float wideGlow = exp(-radialDist * 1.55) * (0.20 + 0.22 * u_haze);
+
+          float aboveHorizon = smoothstep(horizonY - 0.03, horizonY + 0.025, uv.y);
+          vec3 solarLight = discColor * sunDisc * 3.2 * (1.0 - u_haze * 0.58)
+                          + u_sunTint * (corona * 1.1 + aureole * 0.65 + wideGlow * 0.42);
+          sky += solarLight * aboveHorizon;
+
+          // 3. 透视投影 FBM 程序化云纹条带 (Cloud Streaks)
+          if (u_cloudStreaks > 0.005) {
+            float skyDepth = max(uv.y - horizonY + 0.09, 0.02);
+            vec2 cloudUV = vec2((uv.x - 0.5) * aspect / skyDepth, 1.15 / skyDepth);
+            float drift = u_time * (0.045 + 0.22 * u_driftSpeed) * motionScale;
+
+            vec2 p1 = cloudUV * vec2(0.42, 1.75) + vec2(drift, drift * 0.08);
+            vec2 p2 = cloudUV * vec2(0.85, 3.40) + vec2(drift * 1.55 + 4.2, -drift * 0.05);
+
+            float n1 = fbm(p1);
+            float n2 = fbm(p2 + vec2(n1 * 0.65, 0.0));
+            float streak = smoothstep(0.42, 0.80, n1 * 0.65 + n2 * 0.48);
+
+            // 在地平线和极高天顶自然淡出，避免边缘生硬
+            float cloudMask = smoothstep(horizonY + 0.01, horizonY + 0.20, uv.y)
+                            * (1.0 - smoothstep(0.76, 1.02, uv.y));
+            float density = streak * cloudMask * u_cloudStreaks * 0.78;
+
+            // 云层受光：靠近太阳边缘泛金红高光，远离太阳呈现冷暗剪影
+            float forwardScatter = exp(-radialDist * 2.4);
+            vec3 cloudDark = mix(u_zenith * 0.85, u_horizon * 0.42, 0.35);
+            vec3 cloudRim = mix(u_sunTint * 1.35, flushColor * 1.45, u_duskFlush * 0.55);
+            vec3 cloudCol = mix(cloudDark, cloudRim, clamp(0.18 + forwardScatter * 0.92 + (1.0 - n1) * 0.25, 0.0, 1.0));
+
+            sky = mix(sky, cloudCol, clamp(density * (1.0 - u_haze * 0.25), 0.0, 0.82));
+            // 薄云边缘额外背光辉光
+            sky += cloudRim * pow(forwardScatter, 1.6) * streak * cloudMask * u_cloudStreaks * 0.36;
+          }
+
+          // 4. 光学镜头眩光与微弱星芒 / 变形光斑 (Flare)
+          if (u_flare > 0.01) {
+            float angle = 0.42;
+            mat2 fRot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+            vec2 fd = fRot * delta;
+
+            // 6 尖柔和星芒
+            float s1 = exp(-abs(fd.y) * 52.0) * exp(-abs(fd.x) * 3.8);
+            float s2 = exp(-abs(fd.x) * 68.0) * exp(-abs(fd.y) * 5.2);
+            float diag1 = exp(-abs(fd.x * 0.866 + fd.y * 0.5) * 64.0) * exp(-radialDist * 4.6);
+            float diag2 = exp(-abs(fd.x * 0.866 - fd.y * 0.5) * 64.0) * exp(-radialDist * 4.6);
+
+            // 细腻水平变形光带 (Anamorphic streak)
+            float anamorphic = exp(-abs(delta.y) * 44.0) * exp(-abs(delta.x) * 2.1);
+
+            // 沿太阳-中心轴线的 3 个克制光学鬼影
+            vec2 axis = vec2(0.5, 0.5) - sunPos;
+            vec2 g1Pos = sunPos + axis * 0.72;
+            vec2 g2Pos = sunPos + axis * 1.32;
+            vec2 g3Pos = sunPos + axis * 1.82;
+
+            float g1 = exp(-pow(length((uv - g1Pos) * vec2(aspect, 1.0)) / 0.048, 2.0)) * 0.16;
+            float g2 = smoothstep(0.088, 0.068, length((uv - g2Pos) * vec2(aspect, 1.0)))
+                     * smoothstep(0.048, 0.072, length((uv - g2Pos) * vec2(aspect, 1.0))) * 0.11;
+            float g3 = exp(-pow(length((uv - g3Pos) * vec2(aspect, 1.0)) / 0.028, 2.0)) * 0.14;
+
+            vec3 flareCol = u_sunTint * (s1 * 0.42 + s2 * 0.22 + (diag1 + diag2) * 0.16 + anamorphic * 0.34);
+            flareCol += vec3(0.95, 0.65, 0.40) * g1 + vec3(0.45, 0.76, 1.0) * g2 + vec3(0.96, 0.72, 0.55) * g3;
+
+            sky += flareCol * u_flare * (1.0 - u_haze * 0.45) * aboveHorizon;
+          }
+
+          // 5. 地平线下方沉静的大气雾面，托住底部文案
+          float belowMask = 1.0 - smoothstep(horizonY - 0.08, horizonY + 0.015, uv.y);
+          vec3 groundMist = mix(vec3(0.025, 0.032, 0.052), u_horizon * 0.22, exp(-max(horizonY - uv.y, 0.0) * 14.0));
+          groundMist += u_sunTint * exp(-abs(uv.x - sunPos.x) * 3.6) * exp(-max(horizonY - uv.y, 0.0) * 18.0) * 0.22;
+          sky = mix(sky, groundMist, belowMask);
+
+          // 6. 曝光 + ACES 电影级色调映射 + Gamma + 消色带抖动
+          vec3 mapped = acesToneMap(sky * u_exposure);
+          mapped = pow(max(mapped, 0.0), vec3(1.0 / 2.2));
+          mapped += (ign(gl_FragCoord.xy) - 0.5) / 255.0;
+
+          fragColor = vec4(clamp(mapped, 0.0, 1.0), 1.0);
+        }
+      `;
+
+      let gl = null;
+      let program = null;
+      let uniforms = {};
+      let ctx2d = null;
+
+      function compileShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      function initWebGL2() {
+        try {
+          gl = canvas.getContext("webgl2", {
+            alpha: false,
+            antialias: false,
+            depth: false,
+            stencil: false,
+            powerPreference: "high-performance"
+          });
+          if (!gl) return false;
+
+          const vs = compileShader(gl.VERTEX_SHADER, VS_SRC);
+          const fs = compileShader(gl.FRAGMENT_SHADER, FS_SRC);
+          if (!vs || !fs) return false;
+
+          program = gl.createProgram();
+          gl.attachShader(program, vs);
+          gl.attachShader(program, fs);
+          gl.linkProgram(program);
+          if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
+
+          gl.useProgram(program);
+          const names = [
+            "u_res", "u_time", "u_elevation", "u_haze", "u_cloudStreaks",
+            "u_duskFlush", "u_flare", "u_exposure", "u_driftSpeed",
+            "u_reducedMotion", "u_zenith", "u_horizon", "u_sunTint"
+          ];
+          names.forEach((n) => {
+            uniforms[n] = gl.getUniformLocation(program, n);
+          });
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      const webglReady = initWebGL2();
+      if (!webglReady) {
+        engineMode = "2D Atmospheric";
+        ctx2d = canvas.getContext("2d");
+      }
+      engineBadge.textContent = webglReady ? "WebGL2" : "2D Fallback";
+
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = Math.max(1, Math.floor(window.innerWidth * dpr));
+        const h = Math.max(1, Math.floor(window.innerHeight * dpr));
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width = w;
+          canvas.height = h;
+        }
+        if (gl) {
+          gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      function drawFallback2D() {
+        if (!ctx2d) return;
+        const w = canvas.width;
+        const h = canvas.height;
+        const toRgb = (arr, mul = 255) =>
+          `rgb(${Math.min(255, Math.round(arr[0] * mul))}, ${Math.min(255, Math.round(arr[1] * mul))}, ${Math.min(255, Math.round(arr[2] * mul))})`;
+
+        const grad = ctx2d.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, toRgb(current.zenith, 290));
+        grad.addColorStop(0.74, toRgb(current.horizon, 240));
+        grad.addColorStop(1, "#070a11");
+        ctx2d.fillStyle = grad;
+        ctx2d.fillRect(0, 0, w, h);
+
+        const sx = w * 0.67;
+        const sy = h * (0.82 - current.elevation * 0.62);
+        const sunGrad = ctx2d.createRadialGradient(sx, sy, 4, sx, sy, Math.max(w, h) * 0.42);
+        sunGrad.addColorStop(0, "rgba(255, 248, 232, 0.95)");
+        sunGrad.addColorStop(0.14, `rgba(${Math.round(current.sunTint[0] * 255)}, ${Math.round(current.sunTint[1] * 255)}, ${Math.round(current.sunTint[2] * 255)}, 0.55)`);
+        sunGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx2d.fillStyle = sunGrad;
+        ctx2d.fillRect(0, 0, w, h);
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function updateTelemetry() {
+        const prefix = webglReady ? "WebGL2 Procedural Sky" : "2D Atmospheric Sky";
+        footerTelemetry.textContent = `${prefix} · Preset: ${activePresetKey}`;
+      }
+
+      let startTime = performance.now();
+      function render(now) {
+        const dt = 0.065; // 平滑参数插值系数
+        current.elevation = lerp(current.elevation, target.elevation, dt);
+        current.haze = lerp(current.haze, target.haze, dt);
+        current.cloudStreaks = lerp(current.cloudStreaks, target.cloudStreaks, dt);
+        current.duskFlush = lerp(current.duskFlush, target.duskFlush, dt);
+        current.flare = lerp(current.flare, target.flare, dt);
+        current.exposure = lerp(current.exposure, target.exposure, dt);
+        current.driftSpeed = lerp(current.driftSpeed, target.driftSpeed, dt);
+        current.veil = lerp(current.veil, target.veil, dt);
+
+        for (let i = 0; i < 3; i++) {
+          current.zenith[i] = lerp(current.zenith[i], target.zenith[i], dt);
+          current.horizon[i] = lerp(current.horizon[i], target.horizon[i], dt);
+          current.sunTint[i] = lerp(current.sunTint[i], target.sunTint[i], dt);
+        }
+
+        // 动态调整前景暗幕，保证亮色天空下文字同样清晰可读
+        const adaptiveVeil = Math.min(0.48, Math.max(0.14, current.veil + current.elevation * 0.12 + (current.exposure - 1.0) * 0.14));
+        document.documentElement.style.setProperty("--veil-opacity", adaptiveVeil.toFixed(3));
+
+        if (gl && program) {
+          const elapsed = (now - startTime) * 0.001;
+          gl.useProgram(program);
+          gl.uniform2f(uniforms.u_res, canvas.width, canvas.height);
+          gl.uniform1f(uniforms.u_time, elapsed);
+          gl.uniform1f(uniforms.u_elevation, current.elevation);
+          gl.uniform1f(uniforms.u_haze, current.haze);
+          gl.uniform1f(uniforms.u_cloudStreaks, current.cloudStreaks);
+          gl.uniform1f(uniforms.u_duskFlush, current.duskFlush);
+          gl.uniform1f(uniforms.u_flare, current.flare);
+          gl.uniform1f(uniforms.u_exposure, current.exposure);
+          gl.uniform1f(uniforms.u_driftSpeed, current.driftSpeed);
+          gl.uniform1f(uniforms.u_reducedMotion, isReducedMotion ? 1.0 : 0.0);
+          gl.uniform3fv(uniforms.u_zenith, current.zenith);
+          gl.uniform3fv(uniforms.u_horizon, current.horizon);
+          gl.uniform3fv(uniforms.u_sunTint, current.sunTint);
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+        } else {
+          drawFallback2D();
+        }
+
+        requestAnimationFrame(render);
+      }
+
+      function applyPreset(key, notify = true) {
+        const preset = SKY_PRESETS[key];
+        if (!preset) return;
+        activePresetKey = key;
+        Object.assign(target, clonePresetState(preset));
+        updateTelemetry();
+        if (notify && typeof onPresetChange === "function") {
+          onPresetChange(key, preset);
+        }
+      }
+
+      function setParam(key, value) {
+        if (typeof target[key] === "number") {
+          target[key] = value;
+        }
+      }
+
+      function cyclePreset() {
+        const idx = PRESET_ORDER.indexOf(activePresetKey);
+        const nextKey = PRESET_ORDER[(idx + 1) % PRESET_ORDER.length];
+        applyPreset(nextKey, true);
+      }
+
+      function reset() {
+        applyPreset("dusk", true);
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      if (reduceMotionQuery.addEventListener) {
+        reduceMotionQuery.addEventListener("change", (e) => {
+          isReducedMotion = e.matches;
+        });
+      }
+
+      resizeCanvas();
+      updateTelemetry();
+      requestAnimationFrame(render);
+
+      return {
+        applyPreset,
+        setParam,
+        cyclePreset,
+        reset,
+        getActivePreset: () => activePresetKey,
+        getTarget: () => target
+      };
+    }
+
+    /* =========================================================================
+       模块二：Atmosphere 控制面板 & Hero Aidan.tsx 联动
+       ========================================================================= */
+    function initAtmosphereUI(sky) {
+      const toggleBtn = document.getElementById("atmo-toggle-btn");
+      const closeBtn = document.getElementById("atmo-close-btn");
+      const popover = document.getElementById("atmosphere-popover");
+      const presetGrid = document.getElementById("preset-grid");
+      const sliderList = document.getElementById("slider-list");
+      const resetBtn = document.getElementById("atmo-reset-btn");
+      const footerResetBtn = document.getElementById("footer-reset-sky");
+      const cyclerBtn = document.getElementById("preset-cycler-btn");
+      const navPresetName = document.getElementById("nav-preset-name");
+      const navDot = cyclerBtn.querySelector(".preset-dot-mini");
+
+      const sliderInputs = {};
+      const sliderOutputs = {};
+
+      // 渲染 6 个预设按钮
+      PRESET_ORDER.forEach((key) => {
+        const preset = SKY_PRESETS[key];
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "preset-pill";
+        btn.dataset.preset = key;
+        btn.textContent = preset.label;
+        btn.addEventListener("click", () => sky.applyPreset(key, true));
+        presetGrid.appendChild(btn);
+      });
+
+      // 渲染 7 个超细参数滑块
+      SLIDER_SPECS.forEach((spec) => {
+        const row = document.createElement("div");
+        row.className = "slider-row";
+
+        const meta = document.createElement("div");
+        meta.className = "slider-meta";
+        meta.innerHTML = `<label class="slider-label" for="slider-${spec.key}">${spec.label}</label><span class="slider-val" id="val-${spec.key}">0.00</span>`;
+
+        const input = document.createElement("input");
+        input.type = "range";
+        input.id = `slider-${spec.key}`;
+        input.className = "solar-slider";
+        input.min = String(spec.min);
+        input.max = String(spec.max);
+        input.step = String(spec.step);
+
+        const out = meta.querySelector(".slider-val");
+        sliderInputs[spec.key] = input;
+        sliderOutputs[spec.key] = out;
+
+        input.addEventListener("input", () => {
+          const val = parseFloat(input.value);
+          out.textContent = val.toFixed(2);
+          sky.setParam(spec.key, val);
+        });
+
+        row.appendChild(meta);
+        row.appendChild(input);
+        sliderList.appendChild(row);
+      });
+
+      function syncControls(presetKey, preset) {
+        navPresetName.textContent = preset.label;
+        if (navDot && preset.dotColor) {
+          navDot.style.background = preset.dotColor;
+          navDot.style.boxShadow = `0 0 8px ${preset.dotColor}`;
+        }
+
+        presetGrid.querySelectorAll(".preset-pill").forEach((pill) => {
+          pill.classList.toggle("active", pill.dataset.preset === presetKey);
+        });
+
+        SLIDER_SPECS.forEach((spec) => {
+          const v = preset[spec.key];
+          sliderInputs[spec.key].value = String(v);
+          sliderOutputs[spec.key].textContent = v.toFixed(2);
+        });
+      }
+
+      function setPopoverOpen(open) {
+        popover.classList.toggle("open", open);
+        popover.setAttribute("aria-hidden", String(!open));
+        toggleBtn.classList.toggle("active", open);
+        toggleBtn.setAttribute("aria-expanded", String(open));
+      }
+
+      toggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setPopoverOpen(!popover.classList.contains("open"));
+      });
+
+      closeBtn.addEventListener("click", () => setPopoverOpen(false));
+      cyclerBtn.addEventListener("click", () => sky.cyclePreset());
+      resetBtn.addEventListener("click", () => sky.reset());
+      footerResetBtn.addEventListener("click", () => sky.reset());
+
+      document.addEventListener("click", (e) => {
+        if (popover.classList.contains("open") && !popover.contains(e.target) && !toggleBtn.contains(e.target)) {
+          setPopoverOpen(false);
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setPopoverOpen(false);
+      });
+
+      return { syncControls };
+    }
+
+    /* =========================================================================
+       模块三：Aidan.tsx 代码卡片渲染与一键复制
+       ========================================================================= */
+    function initTsxCodeCard() {
+      const preEl = document.getElementById("tsx-code-pre");
+      const copyBtn = document.getElementById("copy-tsx-btn");
+      const copyLabel = document.getElementById("copy-tsx-label");
+      const spec = SITE_CONFIG.componentSpec;
+
+      let currentPreset = "dusk";
+      let pulseTimer = null;
+      let copyTimer = null;
+
+      function getRawCode(presetKey) {
+        const stackStr = spec.stack.map((s) => `'${s}'`).join(", ");
+        return [
+          `import { Aidan } from '@dongjiahong/profile'`,
+          ``,
+          `<Aidan`,
+          `  focus="${spec.focus}"`,
+          `  stack={[${stackStr}]}`,
+          `  timeframe="${spec.timeframe}"`,
+          `  skyPreset="${presetKey}"`,
+          `  status="${spec.status}"`,
+          `/>`
+        ].join("\n");
+      }
+
+      function render(presetKey, shouldPulse = false) {
+        currentPreset = presetKey;
+        const stackHtml = spec.stack
+          .map((s) => `<span class="tok-str">'${s}'</span>`)
+          .join(`<span class="tok-punc">, </span>`);
+
+        preEl.innerHTML =
+          `<span class="tok-kw">import</span> <span class="tok-punc">{</span> <span class="tok-comp">Aidan</span> <span class="tok-punc">}</span> <span class="tok-kw">from</span> <span class="tok-str">'@dongjiahong/profile'</span>\n\n` +
+          `<span class="tok-punc">&lt;</span><span class="tok-comp">Aidan</span>\n` +
+          `  <span class="tok-prop">focus</span><span class="tok-punc">=</span><span class="tok-str">"${spec.focus}"</span>\n` +
+          `  <span class="tok-prop">stack</span><span class="tok-punc">={[</span>${stackHtml}<span class="tok-punc">]}</span>\n` +
+          `  <span class="tok-prop">timeframe</span><span class="tok-punc">=</span><span class="tok-str">"${spec.timeframe}"</span>\n` +
+          `  <span class="tok-prop">skyPreset</span><span class="tok-punc">=</span><span id="live-preset-prop" class="tok-str preset-prop-val">"${presetKey}"</span>\n` +
+          `  <span class="tok-prop">status</span><span class="tok-punc">=</span><span class="tok-str">"${spec.status}"</span>\n` +
+          `<span class="tok-punc">/&gt;</span>`;
+
+        if (shouldPulse) {
+          const el = document.getElementById("live-preset-prop");
+          if (el) {
+            el.classList.add("pulse");
+            clearTimeout(pulseTimer);
+            pulseTimer = setTimeout(() => el.classList.remove("pulse"), 520);
+          }
+        }
+      }
+
+      copyBtn.addEventListener("click", () => {
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = getRawCode(currentPreset);
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+
+          copyLabel.textContent = "Copied ✓";
+          clearTimeout(copyTimer);
+          copyTimer = setTimeout(() => {
+            copyLabel.textContent = "Copy";
+          }, 1600);
+        } catch (err) {
+          copyLabel.textContent = "Failed";
+        }
+      });
+
+      render("dusk", false);
+      return { render };
+    }
+
+    /* =========================================================================
+       模块四：工程项目展示与分类筛选
+       ========================================================================= */
+    function initProjects() {
+      const filtersEl = document.getElementById("project-filters");
+      const gridEl = document.getElementById("projects-grid");
+      let activeCat = "全部";
+
+      function renderFilters() {
+        filtersEl.innerHTML = "";
+        SITE_CONFIG.projectCategories.forEach((cat) => {
+          const count = cat === "全部"
+            ? SITE_CONFIG.projects.length
+            : SITE_CONFIG.projects.filter((p) => p.category === cat).length;
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `filter-pill${cat === activeCat ? " active" : ""}`;
+          btn.textContent = `${cat} · ${count}`;
+          btn.setAttribute("role", "tab");
+          btn.setAttribute("aria-selected", String(cat === activeCat));
+          btn.addEventListener("click", () => {
+            activeCat = cat;
+            renderFilters();
+            renderGrid();
+          });
+          filtersEl.appendChild(btn);
+        });
+      }
+
+      function renderGrid() {
+        const items = activeCat === "全部"
+          ? SITE_CONFIG.projects
+          : SITE_CONFIG.projects.filter((p) => p.category === activeCat);
+
+        gridEl.innerHTML = items
+          .map((repo) => {
+            const langColor = SITE_CONFIG.languageColors[repo.language] || "#94a3b8";
+            return `
+              <a href="${repo.url}" target="_blank" rel="noopener noreferrer" class="glass interactive repo-card">
+                <div>
+                  <div class="repo-top">
+                    <span class="repo-cat">${repo.category}</span>
+                    <svg class="repo-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="7" y1="17" x2="17" y2="7"></line>
+                      <polyline points="7 7 17 7 17 17"></polyline>
+                    </svg>
+                  </div>
+                  <h3 class="repo-name">${repo.name}</h3>
+                  <p class="repo-desc">${repo.desc}</p>
+                </div>
+                <div class="repo-foot">
+                  <span class="lang-meta">
+                    <span class="lang-dot" style="background:${langColor};"></span>
+                    <span>${repo.language}</span>
+                  </span>
+                  <span>dongjiahong/${repo.name}</span>
+                </div>
+              </a>
+            `;
+          })
+          .join("");
+      }
+
+      renderFilters();
+      renderGrid();
+    }
+
+    /* =========================================================================
+       模块五：交易观察室 — 26 根 5m Al Brooks 价格行为交互画布
+       ========================================================================= */
+    function initPriceActionLab() {
+      const canvas = document.getElementById("pa-canvas");
+      const ctx = canvas.getContext("2d");
+      const hudOhlc = document.getElementById("pa-hud-ohlc");
+      const hudNote = document.getElementById("pa-hud-note");
+      const replayBtn = document.getElementById("pa-replay-btn");
+      const layerBtns = document.querySelectorAll(".layer-chip");
+
+      // 前置热身收盘序列，保证 EMA20 从第 1 根起贴合多头趋势形态
+      const warmupCloses = [
+        96.4, 96.7, 97.0, 97.2, 97.5, 97.8, 98.0, 98.2,
+        98.5, 98.7, 98.9, 99.1, 99.3, 99.5
+      ];
+
+      // 26 根真实感 5m 走势：强多头推动 -> 两段回调 -> 回踩 EMA20 -> H1/H2 突破微趋势线 -> 延续
+      const bars = [
+        { o: 99.5,  h: 100.8, l: 99.3,  c: 100.6, note: "强阳启动，多头掌控开盘节奏" },
+        { o: 100.6, h: 102.0, l: 100.4, c: 101.8, note: "饱满跟随阳线，脱离均线" },
+        { o: 101.8, h: 102.9, l: 101.5, c: 102.7, note: "趋势脉冲延伸，连续收高" },
+        { o: 102.7, h: 103.5, l: 102.3, c: 103.1, note: "温和推进，未见明显卖压" },
+        { o: 103.1, h: 104.3, l: 102.9, c: 104.1, note: "首段推动高点区，远离 EMA20" },
+        { o: 104.1, h: 104.7, l: 103.6, c: 103.8, note: "高位上影停顿 · 微趋势线锚点" },
+
+        { o: 103.8, h: 104.0, l: 102.9, c: 103.0, note: "回调第一腿展开，多头部分止盈" },
+        { o: 103.0, h: 103.3, l: 102.1, c: 102.3, note: "有序回落，向动态均线靠拢" },
+        { o: 102.3, h: 103.1, l: 101.8, c: 102.9, note: "H1 信号棒 · 下影试探买盘承接" },
+        { o: 102.9, h: 103.6, l: 102.6, c: 103.2, note: "H1 触发但受压于微趋势线" },
+
+        { o: 103.2, h: 103.4, l: 102.2, c: 102.4, note: "回调第二腿启动，清洗浮筹" },
+        { o: 102.4, h: 102.7, l: 101.5, c: 101.8, note: "逼近 EMA20 支撑，空头动能收窄" },
+        { o: 101.8, h: 102.1, l: 101.2, c: 101.6, note: "精准回踩 EMA20，双腿低点试探" },
+        { o: 101.6, h: 103.1, l: 101.4, c: 102.9, note: "H2 信号棒 · 饱满阳线打破微趋势线" },
+
+        { o: 102.9, h: 104.2, l: 102.8, c: 104.0, note: "BO 跟随确认 · H2 结构有效触发" },
+        { o: 104.0, h: 105.1, l: 103.8, c: 104.9, note: "突破前高阻力，展开二段主升" },
+        { o: 104.9, h: 105.4, l: 104.4, c: 104.6, note: "突破后浅幅停顿蓄力" },
+        { o: 104.6, h: 105.8, l: 104.5, c: 105.6, note: "买盘持续承接，重心抬高" },
+        { o: 105.6, h: 106.5, l: 105.3, c: 106.2, note: "多头通道稳步延伸" },
+        { o: 106.2, h: 106.7, l: 105.6, c: 105.9, note: "窄幅阴线整理，无恐慌抛压" },
+        { o: 105.9, h: 107.0, l: 105.8, c: 106.8, note: "强势反包，延续顺势节奏" },
+        { o: 106.8, h: 107.6, l: 106.5, c: 107.3, note: "接近等距测量目标区 (MM)" },
+        { o: 107.3, h: 107.8, l: 106.8, c: 107.0, note: "目标位附近出现小幅获利了结" },
+        { o: 107.0, h: 108.0, l: 106.9, c: 107.8, note: "温和再创新高，结构完整" },
+        { o: 107.8, h: 108.3, l: 107.3, c: 107.6, note: "高位收窄整固，波动收敛" },
+        { o: 107.6, h: 108.5, l: 107.5, c: 108.2, note: "维持多头强势收盘" }
+      ];
+
+      // 计算平滑 EMA 20
+      const ema20 = [];
+      const k = 2 / (20 + 1);
+      let prevEma = warmupCloses[0];
+      for (let i = 1; i < warmupCloses.length; i++) {
+        prevEma = warmupCloses[i] * k + prevEma * (1 - k);
+      }
+      for (let i = 0; i < bars.length; i++) {
+        prevEma = bars[i].c * k + prevEma * (1 - k);
+        ema20.push(prevEma);
+      }
+
+      const layers = { ema: true, tl: true, labels: true, count: true };
+      let visibleCount = bars.length;
+      let hoveredIdx = -1;
+      let replayTimer = null;
+
+      const minPrice = Math.min(...bars.map((b) => b.l)) - 1.25;
+      const maxPrice = Math.max(...bars.map((b) => b.h)) + 1.15;
+
+      function getLayout(w, h) {
+        const pad = { top: 20, right: 48, bottom: 26, left: 12 };
+        const plotW = Math.max(10, w - pad.left - pad.right);
+        const plotH = Math.max(10, h - pad.top - pad.bottom);
+        const step = plotW / bars.length;
+        const xOf = (i) => pad.left + (i + 0.5) * step;
+        const yOf = (p) => pad.top + ((maxPrice - p) / (maxPrice - minPrice)) * plotH;
+        return { pad, plotW, plotH, step, xOf, yOf };
+      }
+
+      function updateHud(idx) {
+        const i = idx >= 0 && idx < visibleCount ? idx : visibleCount - 1;
+        const b = bars[i];
+        const num = String(i + 1).padStart(2, "0");
+        hudOhlc.textContent = `BAR #${num} · O:${b.o.toFixed(1)} H:${b.h.toFixed(1)} L:${b.l.toFixed(1)} C:${b.c.toFixed(1)}`;
+        hudNote.textContent = b.note;
+      }
+
+      function draw() {
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const cw = Math.round(rect.width * dpr);
+        const ch = Math.round(rect.height * dpr);
+        if (canvas.width !== cw || canvas.height !== ch) {
+          canvas.width = cw;
+          canvas.height = ch;
+        }
+
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        const w = rect.width;
+        const h = rect.height;
+        const { pad, plotH, step, xOf, yOf } = getLayout(w, h);
+
+        ctx.clearRect(0, 0, w, h);
+
+        // 1. 水平参考网格与右侧价格刻度
+        ctx.font = '10px "JetBrains Mono", monospace';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        const gridSteps = 4;
+        for (let i = 0; i <= gridSteps; i++) {
+          const p = minPrice + ((maxPrice - minPrice) * i) / gridSteps;
+          const y = Math.round(yOf(p)) + 0.5;
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.065)";
+          ctx.lineWidth = 1;
+          ctx.moveTo(pad.left, y);
+          ctx.lineTo(w - pad.right, y);
+          ctx.stroke();
+
+          ctx.fillStyle = "rgba(203, 213, 225, 0.45)";
+          ctx.fillText(p.toFixed(1), w - pad.right + 7, y);
+        }
+
+        // 2. 回调段微趋势线 (连接 Bar 6 高点 -> Bar 10 高点，延伸至 Bar 15)
+        if (layers.tl && visibleCount > 10) {
+          const i1 = 5, p1 = bars[5].h + 0.14;
+          const i2 = 9, p2 = bars[9].h + 0.14;
+          const slope = (p2 - p1) / (i2 - i1);
+          const endI = Math.min(visibleCount - 1, 14);
+          const pEnd = p1 + slope * (endI - i1);
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.setLineDash([5, 4]);
+          ctx.strokeStyle = "#7dd3fc";
+          ctx.lineWidth = 1.6;
+          ctx.moveTo(xOf(i1), yOf(p1));
+          ctx.lineTo(xOf(endI), yOf(pEnd));
+          ctx.stroke();
+          ctx.restore();
+
+          ctx.fillStyle = "#7dd3fc";
+          ctx.font = '600 10px "JetBrains Mono", monospace';
+          ctx.textAlign = "left";
+          ctx.fillText("Micro TL", xOf(i1) + 4, yOf(p1) - 9);
+        }
+
+        // 3. EMA 20 曲线
+        if (layers.ema && visibleCount > 1) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.strokeStyle = "#fbbf24";
+          ctx.lineWidth = 1.75;
+          ctx.lineJoin = "round";
+          for (let i = 0; i < visibleCount; i++) {
+            const x = xOf(i);
+            const y = yOf(ema20[i]);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+
+          const lastI = visibleCount - 1;
+          ctx.fillStyle = "#fbbf24";
+          ctx.font = '600 10px "JetBrains Mono", monospace';
+          ctx.textAlign = "right";
+          ctx.fillText("EMA20", xOf(lastI), yOf(ema20[lastI]) + 14);
+          ctx.restore();
+        }
+
+        // 4. K 线柱体 & Bar Count 计数
+        const candleW = Math.max(4, Math.min(10, step * 0.56));
+        for (let i = 0; i < visibleCount; i++) {
+          const b = bars[i];
+          const isBull = b.c >= b.o;
+          const col = isBull ? "#34d399" : "#fb7185";
+          const x = xOf(i);
+
+          if (i === hoveredIdx) {
+            ctx.fillStyle = "rgba(125, 211, 252, 0.09)";
+            ctx.fillRect(x - step / 2, pad.top, step, plotH);
+          }
+
+          // 影线
+          ctx.beginPath();
+          ctx.strokeStyle = col;
+          ctx.lineWidth = 1.35;
+          ctx.moveTo(x, yOf(b.h));
+          ctx.lineTo(x, yOf(b.l));
+          ctx.stroke();
+
+          // 实体
+          const topY = Math.min(yOf(b.o), yOf(b.c));
+          const bodyH = Math.max(2, Math.abs(yOf(b.c) - yOf(b.o)));
+          ctx.fillStyle = col;
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(x - candleW / 2, topY, candleW, bodyH, 1.5);
+          } else {
+            ctx.rect(x - candleW / 2, topY, candleW, bodyH);
+          }
+          ctx.fill();
+
+          // Bar Count（每隔 2 根显示，保持清晰不拥挤）
+          if (layers.count && ((i + 1) % 2 === 0 || i === 0)) {
+            ctx.fillStyle = i === hoveredIdx ? "#fde68a" : "rgba(196, 181, 253, 0.58)";
+            ctx.font = '9px "JetBrains Mono", monospace';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            ctx.fillText(String(i + 1), x, h - pad.bottom + 8);
+          }
+        }
+
+        // 5. H1 / H2 / BO 结构标注
+        if (layers.labels) {
+          const drawTag = (idx, text, accent, pos) => {
+            if (idx >= visibleCount) return;
+            const b = bars[idx];
+            const x = xOf(idx);
+            const anchorY = pos === "below" ? yOf(b.l) + 20 : yOf(b.h) - 20;
+
+            ctx.save();
+            ctx.font = '600 10px "JetBrains Mono", monospace';
+            const tw = ctx.measureText(text).width;
+            const bw = tw + 11;
+            const bh = 18;
+            const bx = Math.max(pad.left, Math.min(w - pad.right - bw, x - bw / 2));
+            const by = anchorY - bh / 2;
+
+            ctx.beginPath();
+            ctx.strokeStyle = accent;
+            ctx.lineWidth = 1;
+            ctx.moveTo(x, pos === "below" ? yOf(b.l) + 3 : yOf(b.h) - 3);
+            ctx.lineTo(x, pos === "below" ? by : by + bh);
+            ctx.stroke();
+
+            ctx.fillStyle = "rgba(8, 12, 20, 0.92)";
+            ctx.strokeStyle = accent;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(bx, by, bw, bh, 4);
+            else ctx.rect(bx, by, bw, bh);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = accent;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(text, bx + bw / 2, by + bh / 2 + 0.5);
+            ctx.restore();
+          };
+
+          drawTag(8,  "H1", "#34d399", "below");
+          drawTag(13, "H2", "#34d399", "below");
+          drawTag(14, "BO", "#7dd3fc", "above");
+        }
+
+        // 6. 悬停十字准星
+        if (hoveredIdx >= 0 && hoveredIdx < visibleCount) {
+          const b = bars[hoveredIdx];
+          const hx = xOf(hoveredIdx);
+          const hy = yOf(b.c);
+          ctx.save();
+          ctx.setLineDash([3, 3]);
+          ctx.strokeStyle = "rgba(248, 250, 252, 0.28)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(hx, pad.top);
+          ctx.lineTo(hx, h - pad.bottom);
+          ctx.moveTo(pad.left, hy);
+          ctx.lineTo(w - pad.right, hy);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      function handlePointer(clientX) {
+        const rect = canvas.getBoundingClientRect();
+        const { pad, step } = getLayout(rect.width, rect.height);
+        const idx = Math.floor((clientX - rect.left - pad.left) / step);
+        if (idx >= 0 && idx < visibleCount) {
+          hoveredIdx = idx;
+          updateHud(idx);
+          draw();
+        }
+      }
+
+      canvas.addEventListener("mousemove", (e) => handlePointer(e.clientX));
+      canvas.addEventListener("mouseleave", () => {
+        hoveredIdx = -1;
+        updateHud(-1);
+        draw();
+      });
+      canvas.addEventListener("touchstart", (e) => {
+        if (e.touches && e.touches[0]) handlePointer(e.touches[0].clientX);
+      }, { passive: true });
+      canvas.addEventListener("touchmove", (e) => {
+        if (e.touches && e.touches[0]) handlePointer(e.touches[0].clientX);
+      }, { passive: true });
+
+      layerBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const key = btn.dataset.layer;
+          layers[key] = !layers[key];
+          btn.classList.toggle("active", layers[key]);
+          draw();
+        });
+      });
+
+      replayBtn.addEventListener("click", () => {
+        clearInterval(replayTimer);
+        hoveredIdx = -1;
+        visibleCount = 1;
+        updateHud(0);
+        draw();
+        replayTimer = setInterval(() => {
+          visibleCount += 1;
+          updateHud(visibleCount - 1);
+          draw();
+          if (visibleCount >= bars.length) {
+            clearInterval(replayTimer);
+            replayTimer = null;
+          }
+        }, 105);
+      });
+
+      window.addEventListener("resize", draw);
+      updateHud(bars.length - 1);
+      draw();
+    }
+
+    /* =========================================================================
+       模块六：交易学习框架卡片 & 本地持久化纪律清单
+       ========================================================================= */
+    function initTradingFrameworkAndChecklist() {
+      const stackEl = document.getElementById("framework-stack");
+      stackEl.innerHTML = SITE_CONFIG.tradingFramework
+        .map(
+          (item) => `
+          <article class="glass framework-card">
+            <div class="framework-head">
+              <h3 class="framework-title">${item.title}</h3>
+              <span class="framework-tag">${item.tag}</span>
+            </div>
+            <p class="framework-desc">${item.desc}</p>
+          </article>
+        `
+        )
+        .join("");
+
+      const listEl = document.getElementById("checklist-items");
+      const badgeEl = document.getElementById("checklist-badge");
+      const progressEl = document.getElementById("checklist-progress");
+      const statusTextEl = document.getElementById("checklist-status-text");
+      const resetBtn = document.getElementById("checklist-reset-btn");
+
+      const STORAGE_KEY = "aidan_solaris_checklist_v1";
+      const total = SITE_CONFIG.checklistItems.length;
+      let state = SafeStorage.get(STORAGE_KEY, Array(total).fill(false));
+      if (!Array.isArray(state) || state.length !== total) {
+        state = Array(total).fill(false);
+      }
+
+      function render() {
+        const done = state.filter(Boolean).length;
+        const pct = Math.round((done / total) * 100);
+        const ready = done === total;
+
+        badgeEl.textContent = ready ? `${done} / ${total} · READY` : `${done} / ${total}`;
+        badgeEl.classList.toggle("ready", ready);
+        progressEl.style.width = `${pct}%`;
+        statusTextEl.textContent = ready
+          ? "条件全部确认，按计划严格执行风控与止损。"
+          : "结构未确认前，空仓等待也是执行。";
+
+        listEl.innerHTML = "";
+        SITE_CONFIG.checklistItems.forEach((text, i) => {
+          const checked = Boolean(state[i]);
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `check-btn${checked ? " checked" : ""}`;
+          btn.setAttribute("aria-pressed", String(checked));
+          btn.innerHTML = `
+            <span class="check-box" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span class="check-label">${i + 1}. ${text}</span>
+          `;
+          btn.addEventListener("click", () => {
+            state[i] = !state[i];
+            SafeStorage.set(STORAGE_KEY, state);
+            render();
+          });
+          listEl.appendChild(btn);
+        });
+      }
+
+      resetBtn.addEventListener("click", () => {
+        state = Array(total).fill(false);
+        SafeStorage.set(STORAGE_KEY, state);
+        render();
+      });
+
+      render();
+    }
+
+    /* =========================================================================
+       模块七：技术栈与平行原则渲染
+       ========================================================================= */
+    function initStackAndPrinciples() {
+      const stackPanel = document.getElementById("stack-panel");
+      stackPanel.innerHTML = SITE_CONFIG.stackGroups
+        .map(
+          (g) => `
+          <div>
+            <div class="stack-group-title">
+              <span class="stack-group-dot" style="background:${g.color};"></span>
+              <span>${g.title}</span>
+            </div>
+            <div class="tech-pills">
+              ${g.items.map((item) => `<span class="tech-pill">${item}</span>`).join("")}
+            </div>
+          </div>
+        `
+        )
+        .join("");
+
+      const principlesPanel = document.getElementById("principles-panel");
+      principlesPanel.innerHTML = SITE_CONFIG.principles
+        .map(
+          (p) => `
+          <div class="principle-item">
+            <span class="principle-idx">${p.idx}</span>
+            <div>
+              <div class="principle-title">${p.title}</div>
+              <div class="principle-sub">${p.sub}</div>
+            </div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    /* =========================================================================
+       模块八：移动端菜单、导航高亮与滚动显现
+       ========================================================================= */
+    function initNavigationAndReveal() {
+      const mobileBtn = document.getElementById("mobile-menu-btn");
+      const drawer = document.getElementById("mobile-drawer");
+
+      function closeDrawer() {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+        mobileBtn.setAttribute("aria-expanded", "false");
+      }
+
+      mobileBtn.addEventListener("click", () => {
+        const open = drawer.classList.toggle("open");
+        drawer.setAttribute("aria-hidden", String(!open));
+        mobileBtn.setAttribute("aria-expanded", String(open));
+      });
+
+      drawer.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeDrawer));
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 960) closeDrawer();
+      });
+
+      // 滚动显现
+      const reveals = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        const ro = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                ro.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.08 }
+        );
+        reveals.forEach((el) => ro.observe(el));
+      } else {
+        reveals.forEach((el) => el.classList.add("visible"));
+      }
+
+      // 导航当前区块高亮
+      const navLinks = document.querySelectorAll(".nav-link");
+      const sections = ["overview", "projects", "trading", "stack"]
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+      if ("IntersectionObserver" in window && sections.length) {
+        const so = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const id = entry.target.id;
+                navLinks.forEach((l) => {
+                  l.classList.toggle("active", l.getAttribute("href") === `#${id}`);
+                });
+              }
+            });
+          },
+          { rootMargin: "-35% 0px -55% 0px" }
+        );
+        sections.forEach((sec) => so.observe(sec));
+      }
+    }
+
+    /* =========================================================================
+       启动入口
+       ========================================================================= */
+    window.addEventListener("DOMContentLoaded", () => {
+      const tsxCard = initTsxCodeCard();
+      let atmoUI = null;
+
+      const sky = createSkyEngine((presetKey, preset) => {
+        if (atmoUI) atmoUI.syncControls(presetKey, preset);
+        tsxCard.render(presetKey, true);
+      });
+
+      atmoUI = initAtmosphereUI(sky);
+      atmoUI.syncControls("dusk", SKY_PRESETS.dusk);
+
+      initProjects();
+      initPriceActionLab();
+      initTradingFrameworkAndChecklist();
+      initStackAndPrinciples();
+      initNavigationAndReveal();
+    });
+  </script>
 </body>
 </html>
