@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aidan - Independent Developer. Personal software projects, trading research and data analysis.">
+  <title>Aidan — Independent Developer</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f7f8fa;
+      color: #27313f;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 76px 24px;
+    }
+    header { margin-bottom: 64px; }
+    .eyebrow {
+      color: #527da5;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    h1 {
+      color: #173c63;
+      font-size: clamp(38px, 7vw, 58px);
+      line-height: 1.15;
+      letter-spacing: -2px;
+      margin: 18px 0;
+    }
+    .intro {
+      color: #697586;
+      font-size: 17px;
+      max-width: 600px;
+    }
+    h2 {
+      color: #173c63;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e5e9ef;
+      border-radius: 14px;
+      padding: 24px;
+    }
+    .card h3 { color: #234f78; margin-top: 0; }
+    .card p { color: #697586; font-size: 14px; }
+    .tag {
+      display: inline-block;
+      background: #edf4fa;
+      color: #37678e;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+    a { color: #326c9d; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer {
+      border-top: 1px solid #e1e6ec;
+      margin-top: 64px;
+      padding-top: 24px;
+      color: #8993a0;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">Independent Developer</div>
+      <h1>Building tools<br>for better thinking.</h1>
+      <p class="intro">
+        I'm Aidan, an independent developer interested in
+        software engineering, financial markets, and
+        personal productivity.
+        This website introduces my personal projects
+        and research interests.
+      </p>
+      <a href="https://github.com/dongjiahong">GitHub →</a>
+    </header>
+
+    <section>
+      <h2>Projects & Research</h2>
+      <div class="projects">
+        <article class="card">
+          <span class="tag">Trading Research</span>
+          <h3>Trading Data & Analysis</h3>
+          <p>
+            A personal research tool using cTrader Open API
+            to collect historical OHLC market data and
+            personal trading history for Price Action
+            research, backtesting and trade review.
+          </p>
+        </article>
+
+        <article class="card">
+          <span class="tag">Productivity</span>
+          <h3>Personal Software Projects</h3>
+          <p>
+            Exploring software tools for capturing ideas,
+            organizing knowledge, reading and improving
+            personal workflows.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section style="margin-top:48px">
+      <h2>About</h2>
+      <p class="intro">
+        I build software for personal use and educational
+        research. My projects focus on practical tools,
+        data analysis and independent experimentation.
+      </p>
+    </section>
+
+    <footer>
+      © 2026 Aidan · Independent Developer
+      <br>
+      <a href="https://github.com/dongjiahong">
+        github.com/dongjiahong
+      </a>
+    </footer>
+  </main>
+</body>
+</html>
